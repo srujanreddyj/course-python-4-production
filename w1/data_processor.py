@@ -95,6 +95,5 @@ class DataProcessor:
 
         # pprint(f'Total Sum: {round(float(aggregate), 2)}')
         return aggregate
-
-
+        
         ######################################## YOUR CODE HERE ##################################################
