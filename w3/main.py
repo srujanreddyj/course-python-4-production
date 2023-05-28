@@ -164,14 +164,26 @@ def main() -> List[Dict]:
     batches = batch_files(file_paths=file_paths, n_processes=n_processes)
 
     ######################################## YOUR CODE HERE ##################################################
+    with multiprocessing.Pool(processes=n_processes) as pool:
+        revenue_data = pool.starmap(run, [(batch, n_process) for n_process, batch in enumerate(batches)])
+        revenue_data = flatten(lst=revenue_data)
 
-    ######################################## YOUR CODE HERE ##################################################
+        pool.close()
+        pool.join()
+
 
     en = time.time()
     print("Overall time taken : {}".format(en-st))
 
     # should return revenue data
+    for yearly_data in revenue_data:
+        with open(os.path.join(output_save_folder, f'{yearly_data["file_name"]}.json'), 'w') as f:
+            f.write(json.dumps(yearly_data))
+        plot_sales_data(yearly_revenue=yearly_data['revenue_per_region'], 
+                        year=yearly_data['file_name'], 
+                        plot_save_path = os.path.join(output_save_folder, f'{yearly_data["file_name"]}.png'))
     return [{}]
+    ######################################## YOUR CODE HERE ##################################################
 
 
 if __name__ == '__main__':
